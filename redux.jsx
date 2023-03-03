@@ -49,3 +49,37 @@ const handleAdd = (item) => {
 }
 // bootstratp
 import '../node_modules/bootstrap/dist/css/bootstrap.css'
+// thunk.js
+import axios from 'axios';
+const { createSlice } = require('@reduxjs/toolkit');
+const productSlice = createSlice({
+    name: 'product',
+    initialState: {
+        data: [],
+    },
+    reducers: {
+        setProducts(state, action) {
+            console.log(action.payload);
+            state.data = action.payload;
+        }
+    },
+});
+export const { setProducts } = productSlice.actions;
+export default productSlice.reducer;
+
+export function fetchProducts() {
+    return async function fetchProductsThunk(dispatch, getState) {
+        try {
+            await axios.get('https://fakestoreapi.com/products')
+                .then((res) => {
+                    console.log(res.data);
+                    dispatch(setProducts(res.data));
+
+                }).catch((err) => {
+                    console.log(err);
+                });
+        } catch (err) {
+
+        }
+    }
+}
